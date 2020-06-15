@@ -7,7 +7,7 @@ from random import random, randint
 import matplotlib.pyplot as plt
 import time
 import os
-from TD3_train import TD3
+from train import TD3
 import multiprocessing
 import numpy as np
 np.random.seed(41)
@@ -125,7 +125,7 @@ class Game(Widget):
 
     car = ObjectProperty(None)
 	
-    def serve_car(self, eventstat, resetvalue, modeupdate, stateupdate, actionupdate, nextstateupdate):
+    def carmovedecider(self, eventstat, resetvalue, modeupdate, stateupdate, actionupdate, nextstateupdate):
         self.car.center = self.center
         self.car.velocity = Vector(6, 0)
         self.car.eventstat = eventstat
@@ -135,8 +135,8 @@ class Game(Widget):
         self.car.actionupdate = actionupdate
         self.car.nextstateupdate = nextstateupdate
 
-
-    def get_state(self, img, car_img, x, y, car_angle,longitude, latitude, on_road, hit_boundary, hit_goal, full_360_degree_rotation, distance_reduced): 
+        ###TODO reward and penalty adjustment for more accuracy
+    def getstatevalue(self, img, car_img, x, y, car_angle,longitude, latitude, on_road, hit_boundary, hit_goal, full_360_degree_rotation, distance_reduced): 
         if x - 40 <0 or y-40 < 0 or x+40 > longitude-1 or y+40 > longitude-1:
             return np.ones((80,80))
         else:				
@@ -158,13 +158,13 @@ class Game(Widget):
 		
     
 	
-    def select_random_on_road_location(self):
+    def rndlocation(self):
         t = np.random.randint(60, self.width-60), np.random.randint(60, self.height-60)
         while sand[t] != 0	:
             t = np.random.randint(60, self.width-60), np.random.randint(60, self.height-60)
         return t
 		
-    def select_demo_location(self, eval_episode_num):
+    def locateon(self, eval_episode_num):
         demo_on_road_postions=[(1031,496), (766,468), (881,424)]
         index = (eval_episode_num - 1) % len(demo_on_road_postions)
         return demo_on_road_postions[index]		
@@ -237,9 +237,9 @@ class Game(Widget):
                 self.car.pos = Vector(np.random.randint(100, longitude-100), np.random.randint(100, latitude-100))                
             elif mode == "Full_Eval":
                 if full_eval_demo_mode == False:
-                    self.car.pos = self.select_random_on_road_location() 
+                    self.car.pos = self.rndlocation() 
                 else:
-                    self.car.pos = self.select_demo_location(eval_episode_num)
+                    self.car.pos = self.locateon(eval_episode_num)
 
 			
             xx = goal_x - self.car.x
@@ -251,7 +251,7 @@ class Game(Widget):
                 on_road = 1
                 on_road_count += 1
             orientation = Vector(*self.car.velocity).angle((xx,yy))/360.
-            state = self.get_state( img,car_img,self.car.x, self.car.y, self.car.angle,longitude, latitude, 0, False, False, False, False)			
+            state = self.getstatevalue( img,car_img,self.car.x, self.car.y, self.car.angle,longitude, latitude, 0, False, False, False, False)			
             car_angle = self.get_car_angle(self.car.angle) 
             self.car.stateupdate.put((state, np.array([orientation, car_angle, 1, on_road]))) 		
    
@@ -277,9 +277,9 @@ class Game(Widget):
                 self.car.pos = Vector(np.random.randint(100, longitude-100), np.random.randint(100, latitude-100))                
             elif mode == "Full_Eval":
                 if full_eval_demo_mode == False:
-                    self.car.pos = self.select_random_on_road_location() 
+                    self.car.pos = self.rndlocation() 
                 else:
-                    self.car.pos = self.select_demo_location(eval_episode_num)
+                    self.car.pos = self.locateon(eval_episode_num)
             last_reward = -50
             self.car.rotation = 0.0
             self.car.angle = 0.0
@@ -334,11 +334,11 @@ class Game(Widget):
                 done = True
 				
             if mode == "Full_Eval" and hit_goal==True and full_eval_demo_mode==False:
-                self.car.pos = self.select_random_on_road_location()
+                self.car.pos = self.rndlocation()
 
         last_distance = distance
 		
-        next_state = self.get_state(img, car_img, self.car.x, self.car.y, self.car.angle,longitude, latitude, on_road, hit_boundary, hit_goal, full_360_degree_rotation, distance_reduced)
+        next_state = self.getstatevalue(img, car_img, self.car.x, self.car.y, self.car.angle,longitude, latitude, on_road, hit_boundary, hit_goal, full_360_degree_rotation, distance_reduced)
 
         if self.car.angle >= 360:	
             self.car.angle = self.car.angle % 360
@@ -360,7 +360,6 @@ class Game(Widget):
         car_angle = self.get_car_angle(self.car.angle)
         self.car.nextstateupdate.put(((next_state, np.array([orientation, car_angle, distance_diff, on_road])), reward, done, current_step))        		
 
-# Adding the painting tools
 
 class MyPaintWidget(Widget):
 
@@ -405,7 +404,7 @@ class CarApp(App):
 
     def build(self):
         parent = Game()
-        parent.serve_car(self.eventstat, self.resetvalue, self.modeupdate, self.stateupdate, self.actionupdate, self.nextstateupdate)
+        parent.carmovedecider(self.eventstat, self.resetvalue, self.modeupdate, self.stateupdate, self.actionupdate, self.nextstateupdate)
         Clock.schedule_interval(parent.updtval, 1.0/60.0)
         self.painter = MyPaintWidget()
         clearbtn = Button(text = 'clear')
@@ -504,7 +503,6 @@ if __name__ == '__main__':
     done = False
 	
     while not done:
-        #action = np.random.randint(3)
         action = env.action_space_sample()
         obs, reward, done, _  = env.step(action)
         print("reward: ", reward, ", done: ", done, ", obs", obs)
