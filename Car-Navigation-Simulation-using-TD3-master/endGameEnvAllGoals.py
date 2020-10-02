@@ -1,9 +1,4 @@
-# -*- coding: utf-8 -*-
-"""
-Created on Sat Jun 13 17:05:13 2020
 
-@author: Gaurav
-"""
 
 # This file is similar to endGameEnv only difference is it doesn't end episode 
 # on max episode steps or with achievement of 3 goals. It goes on till all the goals
