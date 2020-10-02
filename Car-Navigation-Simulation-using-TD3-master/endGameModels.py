@@ -1,9 +1,3 @@
-# -*- coding: utf-8 -*-
-"""
-Created on Fri Jun 12 19:48:21 2020
-
-@author: Gaurav
-"""
 
 #%%
 import os
