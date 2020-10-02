@@ -1,9 +1,3 @@
-# -*- coding: utf-8 -*-
-"""
-Created on Fri Jun 12 19:49:12 2020
-
-@author: Gaurav
-"""
 
 # This file is used to visualize performance of trained models
 #%%
