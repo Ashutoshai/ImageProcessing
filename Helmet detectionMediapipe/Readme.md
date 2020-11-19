@@ -3,20 +3,31 @@
 In this assignment I used tensorflow object detection Api and followed below Steps to Achieve the Functionality
 
 1.Creating Input data .txt files through bounding boxes from images.
+
 2.Converting to train and text.
+
 3.Creating train and test tf records.
+
 4.Added helmet label.
+
 5.Started the training of data.
-6.Convert the model file to tflite by using following command
+
+6.Convert the model file to tflite format.
+
 7.Change the mediapipe graph.pbtxt file and add label into label.txt file and place the tflite model into model directory of mediapipe.
+
 8.in the graph.pbtxt file change the below configuration
 Modelname,numboxes,stride,classes,aspect_ratio,x_scale,y_scale,h_scale,w_scale.
+
 9.Also used android studio to run the tflite model.
+
 10.Since I donot have gpus trained on less iamges on cpu.
 
 Observations:
-1.Automl and Teachable Machine is not comaptible with Mediapipe
+1.Automl and Teachable Machine is not comaptible with Mediapipe.
+
 2.Tensorflow 2.x is not comaptible with google media cpu mode of execution.
+
 3.Faced Environment issues with yolov3 with mediapipe.
 
 Sample Commands
