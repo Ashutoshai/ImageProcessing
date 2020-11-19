@@ -1,7 +1,7 @@
-Helmet detection using google Mediapipe
-**helmetdetection**
-In this assignment I used tensorflow object detection Api
-Steps to Achieve the Functionality
+**Helmet detection using google Mediapipe**
+
+In this assignment I used tensorflow object detection Api and followed below Steps to Achieve the Functionality
+
 1.Creating Input data .txt files through bounding boxes from images.
 2.Converting to train and text.
 3.Creating train and test tf records.
