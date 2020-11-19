@@ -22,13 +22,17 @@ Observations:
 Sample Commands
 
 **tfrecord creation**
+
 python generate_tfrecord.py --csv_input="C:\Users\pashutosh\models\research\train.csv"  --output_path="C:\Users\pashutosh\models\research\train.record" --image_dir="C:/Users/pashutosh/models/research/train/images/"
+
 **train the tf record**
+
 python object_detection/legacy/train.py --logtostderr --train_dir=C:/Users/pashutosh/models/research/trained_model/  --pipeline_config_path=C:/Users/pashutosh/models/research/pretrained_model/ssd_mobilenet_v2_quantized/pipeline.config
 
 python object_detection/export_tflite_ssd_graph.py --pipeline_config_path=C:/Users/pashutosh/models/research/pretrained_model/ssd_mobilenet_v2_quantized/pipeline.config --trained_checkpoint_prefix=C:/Users/pashutosh/models/research/trained_model/model.ckpt-586 --output_directory=C:/Users/pashutosh/models/research/trained_model/tflite/ --add_postprocessing_op=true
 
 **convert to tflite mode in GPU**
+
 tflite_convert --graph_def_file=tflite/tflite_graph.pb --output_file=tflite/detect.tflite --output_format=TFLITE --input_shapes=1,300,300,3 --input_arrays=normalized_input_image_tensor --output_arrays='TFLite_Detection_PostProcess','TFLite-Detection_PostProcess:1','TFLite_Detection_PostProcess:2','TFLite_Detection_PostProcess:3' --inference_type=QUANTIZED_UINT8 --mean_values=128 --std_dev_values=127 --change_concat_input_ranges=false --allow_custom_ops
 
 **convert to tflite mode in CPU**
