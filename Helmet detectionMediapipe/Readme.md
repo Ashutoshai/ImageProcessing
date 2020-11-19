@@ -20,8 +20,9 @@ Observations:
 3.Faced Environment issues with yolov3 with mediapipe.
 
 Sample Commands
+
 **tfrecord creation**
-python generate_tfrecord.py --csv_input="C:\Users\pashutosh\models\research\train.csv"  --output_path="C:\Users\pashutosh\models\research\train.record" --image_dir="C:/Users/pashutosh/models/research/train/images/" - WORKED
+python generate_tfrecord.py --csv_input="C:\Users\pashutosh\models\research\train.csv"  --output_path="C:\Users\pashutosh\models\research\train.record" --image_dir="C:/Users/pashutosh/models/research/train/images/"
 **train the tf record**
 python object_detection/legacy/train.py --logtostderr --train_dir=C:/Users/pashutosh/models/research/trained_model/  --pipeline_config_path=C:/Users/pashutosh/models/research/pretrained_model/ssd_mobilenet_v2_quantized/pipeline.config
 
@@ -34,7 +35,7 @@ tflite_convert --graph_def_file=tflite/tflite_graph.pb --output_file=tflite/dete
 C:\Users\pashutosh\mediapipe_repo\mediapipe\bazel.exe run graph_transforms:summarize_graph --in_graph=C:/Users/pashutosh/models/research/trained_model/tflite/tflite_graph.pb
 
 
-tflite_convert --graph_def_file=tflite/tflite_graph.pb --output_file=tflite/model.tflite --input_format=TENSORFLOW_GRAPHDEF --output_format=TFLITE --inference_type=FLOAT --input_shapes=1,300,300,3 --input_arrays=normalized_input_image_tensor --output_arrays=raw_outputs/box_encodings,raw_outputs/class_predictions - WORKED
+tflite_convert --graph_def_file=tflite/tflite_graph.pb --output_file=tflite/model.tflite --input_format=TENSORFLOW_GRAPHDEF --output_format=TFLITE --inference_type=FLOAT --input_shapes=1,300,300,3 --input_arrays=normalized_input_image_tensor --output_arrays=raw_outputs/box_encodings,raw_outputs/class_predictions
 
 
 In the below Youtube link we have uploaded the video in which masked images are there.
