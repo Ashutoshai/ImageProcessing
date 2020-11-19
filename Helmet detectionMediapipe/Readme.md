@@ -4,7 +4,7 @@ In this assignment I used tensorflow object detection Api and followed below Ste
 
 1.Creating Input data .txt files through bounding boxes from images.
 
-2.Converting to train and text.
+2.Converting to train and test.
 
 3.Creating train and test tf records.
 
